@@ -29,7 +29,11 @@ export class TaskController {
             const task = await Task.findById(taskId).populate("project")
             if (!task) {
                 const error = new Error("Tarea no encontrada")
-                return res.status(404).json({ msg: error.message })
+                return res.status(404).json({ error: error.message })
+            }
+            if (task.project.id.toString() !== req.project.id) {
+                const error = new Error("Esta tarea no pertenece al proyecto")
+                return res.status(400).json({ error: error.message })
             }
             res.json(task)
         } catch (error) {
