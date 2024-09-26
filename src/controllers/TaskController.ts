@@ -13,10 +13,25 @@ export class TaskController {
             console.log(error)
         }
     }
+
     static getAllTasks = async (req: Request, res: Response) => {
         try {
             const tasks = await Task.find({ project: req.project.id }).populate("project")
             res.json(tasks)
+        } catch (error) {
+            res.status(500).json({ error: "Error interno del servidor" });
+        }
+    }
+
+    static getTaskById = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params
+            const task = await Task.findById(taskId).populate("project")
+            if (!task) {
+                const error = new Error("Tarea no encontrada")
+                return res.status(404).json({ msg: error.message })
+            }
+            res.json(task)
         } catch (error) {
             res.status(500).json({ error: "Error interno del servidor" });
         }
