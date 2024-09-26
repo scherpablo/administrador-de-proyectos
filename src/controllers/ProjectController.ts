@@ -8,7 +8,7 @@ export class ProjectController {
       await project.save();
       res.send("Proyecto Creado Correctamente");
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 
@@ -17,7 +17,7 @@ export class ProjectController {
       const projects = await Project.find({});
       res.json(projects);
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 
@@ -33,7 +33,7 @@ export class ProjectController {
 
       res.json(project);
     } catch (error) {
-      console.log({ error: "Error al obtener el proyecto" });
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 
@@ -50,7 +50,7 @@ export class ProjectController {
       await project.save();
       res.send("Proyecto actualizado correctamente");
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 
@@ -67,7 +67,7 @@ export class ProjectController {
       await project.deleteOne();
       res.send("Proyecto eliminado correctamente");
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 }

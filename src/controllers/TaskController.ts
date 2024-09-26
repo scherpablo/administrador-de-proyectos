@@ -40,4 +40,25 @@ export class TaskController {
             res.status(500).json({ error: "Error interno del servidor" });
         }
     }
+
+    static updateTaskById = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params
+            const task = await Task.findById(taskId).populate("project")
+            if (!task) {
+                const error = new Error("Tarea no encontrada")
+                return res.status(404).json({ error: error.message })
+            }
+            if (task.project.id.toString() !== req.project.id) {
+                const error = new Error("Esta tarea no pertenece al proyecto")
+                return res.status(400).json({ error: error.message })
+            }
+            task.name = req.body.name || task.name
+            task.status = req.body.status || task.status
+            await task.save()
+            res.json(task)
+        } catch (error) {
+            res.status(500).json({ error: "Error interno del servidor" });
+        }
+    }
 }
