@@ -92,4 +92,12 @@ router.put(
   TaskController.updateTaskById
 );
 
+//DELETE
+router.delete(
+  "/:projectId/tasks/:taskId",
+  param("taskId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  TaskController.deleteTaskById
+);
+
 export default router;

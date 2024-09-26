@@ -44,7 +44,7 @@ export class TaskController {
     static updateTaskById = async (req: Request, res: Response) => {
         try {
             const { taskId } = req.params
-            const task = await Task.findById(taskId).populate("project")
+            const task = await Task.findByIdAndUpdate(taskId, req.body).populate("project")
             if (!task) {
                 const error = new Error("Tarea no encontrada")
                 return res.status(404).json({ error: error.message })
@@ -53,12 +53,27 @@ export class TaskController {
                 const error = new Error("Esta tarea no pertenece al proyecto")
                 return res.status(400).json({ error: error.message })
             }
-            task.name = req.body.name || task.name
-            task.status = req.body.status || task.status
-            await task.save()
-            res.json(task)
+            res.send("Tarea actualizada correctamente")
         } catch (error) {
             res.status(500).json({ error: "Error interno del servidor" });
+        }
+    }
+
+    static deleteTaskById = async (req: Request, res: Response) => {
+        const { taskId } = req.params
+        try {
+            const task = await Task.findByIdAndDelete(taskId).populate("project")
+            if (!task) {
+                const error = new Error("Tarea no encontrada")
+                return res.status(404).json({ error: error.message })
+            }
+            if (task.project.id.toString() !== req.project.id) {
+                const error = new Error("Esta tarea no pertenece al proyecto")
+                return res.status(400).json({ error: error.message })
+            }
+            res.send("Tarea eliminada correctamente")
+        } catch (error) {
+            res.status(500).json({ error: "Error interno del servidor" })
         }
     }
 }
