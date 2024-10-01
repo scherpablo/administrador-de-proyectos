@@ -69,6 +69,15 @@ router.post(
   handleInputErrors,
   TaskController.createTask
 );
+router.post(
+  "/:projectId/tasks/:taskId/status",
+  param("taskId").isMongoId().withMessage("ID no válido"),
+  body("status")
+    .notEmpty()
+    .withMessage("El estado es obligatorio"),
+  handleInputErrors,
+  TaskController.updateTaskStatusById
+)
 
 //GET
 router.get("/:projectId/tasks", TaskController.getAllTasks);
@@ -87,7 +96,6 @@ router.put(
   body("description")
     .notEmpty()
     .withMessage("La descripcion de la tarea es obligatoria"),
-  body("status").isIn(["pending", "onHold", "inProgress", "underReview", "completed"]),
   handleInputErrors,
   TaskController.updateTaskById
 );

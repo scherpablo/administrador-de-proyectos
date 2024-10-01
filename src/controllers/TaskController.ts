@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Task from "../models/Task";
 
 export class TaskController {
+  //CREATE
   static createTask = async (req: Request, res: Response) => {
     try {
       const task = new Task(req.body);
@@ -14,6 +15,7 @@ export class TaskController {
     }
   };
 
+  //GET
   static getAllTasks = async (req: Request, res: Response) => {
     try {
       const tasks = await Task.find({ project: req.project.id }).populate(
@@ -43,12 +45,11 @@ export class TaskController {
     }
   };
 
+  //UPDTAE
   static updateTaskById = async (req: Request, res: Response) => {
     try {
       const { taskId } = req.params;
-      const task = await Task.findById(taskId).populate(
-        "project"
-      );
+      const task = await Task.findById(taskId).populate("project");
       if (!task) {
         const error = new Error("Tarea no encontrada");
         return res.status(404).json({ error: error.message });
@@ -59,7 +60,6 @@ export class TaskController {
       }
       task.name = req.body.name || task.name;
       task.description = req.body.description || task.description;
-      task.status = req.body.status || task.status;
       await task.save();
       res.send("Tarea actualizada correctamente");
     } catch (error) {
@@ -67,6 +67,24 @@ export class TaskController {
     }
   };
 
+  static updateTaskStatusById = async (req: Request, res: Response) => {
+    try {
+      const { taskId } = req.params;
+      const task = await Task.findById(taskId).populate("project");
+      if (!task) {
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({ error: error.message });
+      }
+      const { status } = req.body;
+      task.status = status;
+      await task.save();
+      res.send("Tarea actualizada correctamente");
+    } catch (error) {
+      res.status(500).json({ error: "Error interno del servidor" });
+    }
+  };
+
+  //DELETE
   static deleteTaskById = async (req: Request, res: Response) => {
     const { taskId } = req.params;
     try {
