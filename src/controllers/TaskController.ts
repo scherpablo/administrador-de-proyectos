@@ -28,11 +28,7 @@ export class TaskController {
   };
 
   static getTaskById = async (req: Request, res: Response) => {
-    try {      
-      if (req.task.project.id.toString() !== req.project.id) {
-        const error = new Error("Esta tarea no pertenece al proyecto");
-        return res.status(400).json({ error: error.message });
-      }
+    try {           
       res.json(req.task);
     } catch (error) {
       res.status(500).json({ error: "Error interno del servidor" });
@@ -41,11 +37,7 @@ export class TaskController {
 
   //UPDTAE
   static updateTaskById = async (req: Request, res: Response) => {
-    try {      
-      if (req.task.project.id.toString() !== req.project.id) {
-        const error = new Error("Esta tarea no pertenece al proyecto");
-        return res.status(400).json({ error: error.message });
-      }
+    try {         
       req.task.name = req.body.name || req.task.name;
       req.task.description = req.body.description || req.task.description;
       await req.task.save();
@@ -69,11 +61,7 @@ export class TaskController {
   //DELETE
   static deleteTaskById = async (req: Request, res: Response) => {
     const { taskId } = req.params;
-    try {     
-      if (req.task.project.id.toString() !== req.project.id) {
-        const error = new Error("Esta tarea no pertenece al proyecto");
-        return res.status(400).json({ error: error.message });
-      }
+    try {           
       req.project.tasks = req.project.tasks.filter(
         (id) => id.toString() !== taskId
       );

@@ -27,3 +27,11 @@ export async function taskExists(
     res.status(500).json({ error: "Error interno del servidor" });
   }
 }
+
+export async function taskBelongsToProject (req: Request, res: Response, next: NextFunction) {
+    if (req.task.project.id.toString() !== req.project.id.toString()) {
+        const error = new Error("Esta tarea no pertenece al proyecto");
+        return res.status(400).json({ error: error.message });
+      }
+      next()
+}
